@@ -1,0 +1,28 @@
+.App {
+  width: 100vw;
+  height: 100vh;
+}
+
+.recipes-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+/*@media screen and (max-width: 800px) {
+  .recipes-container {
+    flex-direction: column;
+    flex-basis: 80%;
+    text-align: center;
+  }
+  .ingredients ul{
+    text-align: left;
+    width: 30%;
+    margin: 0 auto;
+  }
+
+  .instructions {
+    max-width: 60%;
+    margin: 0 auto;
+  }
+}*/
