@@ -7,7 +7,7 @@ const colors = ['#FFCCCC', '#FFE5CC', '#FFFFCC', '#E5FFCC', 'CCFFCC'];
 
 function Recipe(props) {
   return (
-    <div className='recipe' style={{ backgroundColor: colors[count++] }}>
+    <li className='recipe' style={{ backgroundColor: colors[count++] }}>
 
       <img src={props.img} alt={props.name} />
 
@@ -16,7 +16,7 @@ function Recipe(props) {
       <div className="ingredients">
 	<h4>Ingredients:</h4>
 	<ul>
-	  {props.ingredients.map(ingredient => <li>{ingredient}</li>)}
+	  {props.ingredients.map((ingredient, idx) => <li key={idx}>{ingredient}</li>)}
 	</ul>
       </div>
 
@@ -25,7 +25,7 @@ function Recipe(props) {
 	<p>{props.instructions}</p>
       </div>
 
-    </div>
+    </li>
   );
 }
 
