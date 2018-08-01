@@ -3,6 +3,11 @@ import './RecipeForm.css';
 
 class RecipeForm extends Component {
 
+  static defaultProps = {
+    onClose(){},
+    onSave(){}
+  };
+
   constructor(props){
     super(props);
     this.state = {
@@ -12,9 +17,26 @@ class RecipeForm extends Component {
       img:''
     };
     this.handleChange = this.handleChange.bind(this);
-    this.addIngredient = this.addIngredient.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleNewIngredient = this.handleNewIngredient.bind(this);
+    this.updateIngredient = this.updateIngredient.bind(this);
   }
+
+  updateIngredient(e) {
+    let idx = Number(e.target.name.split('-')[1]);
+    console.log(idx);
+    console.log(e.target.value);
+    let ingredients = this.state.ingredients.map((ing, i) => (
+      i === idx ? e.target.value: ing
+    ));
+    this.setState({ingredients});
+  }
+
+  handleNewIngredient(e) {
+    const {ingredients} = this.state;
+    this.setState({ingredients: [...ingredients, '']})
+
+  } 
 
   handleChange(e) {
     this.setState({[e.target.name]: e.target.value});
@@ -22,67 +44,106 @@ class RecipeForm extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
+    this.props.onSave({...this.state});
+    this.setState({
+      title: '',
+      instructions: '',
+      ingredients: [''],
+      img: ''
+    });
   }
 
-  addIngredient(e) {
-    return 1;
-  }
-
-  handleCloseForm(e) {
-
-  }
 
 
   render(){
 
-    const ingredients = this.state.ingredients.map((ingredient, idx) => <li key={idx}>{ingredient}</li>);
+    const {title, instructions, ingredients, img} = this.state;
+
+    let inputs = ingredients.map((ingredient, idx) => (
+	  <div
+	    className="recipe-form-line"
+	    key={`ingredient-${idx}`}
+	  >
+	    <label>
+	      {`${idx+1}. `}
+	      <input
+		type="text"
+		name={`ingredient-${idx}`}
+		placeholder=" Ingredient"
+		onChange={this.updateIngredient}
+		value={ingredient}
+	      />
+	    </label>
+	  </div>
+	));
+
     return (
-      <form className="form-recipe" onSubmit={this.handleSubmit}>
-	<button onClick={this.handleCloseForm}>
-	  X
-	</button>
-	<div className="form-recipe-title">
-	  <label htmlFor="recipe-title">Title</label>
-	  <input 
-	    id="recipe-title" 
-	    name="title"
-	    type="text" 
-	    onChange={this.handleChange} 
-	    value={this.state.title}
-	  />
-	</div>
+      <div className="recipe-form-container">
+	<form className="recipe-form" onSubmit={this.handleSubmit}>
+	  <button onClick={this.props.onClose}>
+	    X
+	  </button>
+	  <div className="recipe-form-line">
+	    <label htmlFor="recipe-title-input">Title</label>
+	    <input 
+	      id="recipe-title-input" 
+	      name="title"
+	      type="text" 
+	      value={title}
+	      size={42}
+	      autoComplete="off"
+	      onChange={this.handleChange} 
+	    />
+	  </div>
 
-	<div className="form-recipe-inst">
-	  <label htmlFor="form-recipe-inst-input">Instructions</label>
-	  <textarea
-	     id="form-recipe-inst-input"
-	     name="instructions"
-	     cols="100"
-	     rows="40"
-	     onChange={this.handleChange} 
-	     value={this.state.instuctions}
-	  />
-	</div>
+	    <label 
+	      htmlFor="recipe-instructions-input"
+	      style={{marginTop: '5px'}}
+	    >
+	      Instructions
+	    </label>
+	    <textarea
+	       key="instructions"
+	       id="form-recipe-inst-input"
+	       type="Instructions"
+	       name="instructions"
+	       cols="50"
+	       rows="8"
+	       autoComplete="off"
+	       value={instructions}
+	       onChange={this.handleChange} 
+	    />
+	    {inputs}
+	    <button
+	      type="button"
+	      onClick={this.handleNewIngredient}
+	      className="buttons"
+	    >
+	      +
+	    </button>
 
-	<div className="form-recipe-ing">
-	  <ol>
-	    {ingredients}
-	  </ol>
-	  <button onClick={this.addIngredient}>+</button>
-	</div>
+	  <div className="recipe-form-line">
+	    <label htmlFor="recipe-img-input">Image Url</label>
+	    <input 
+	      id="recipe-img-input"
+	      type="text" 
+	      placeholder=""
+	      name="img" 
+	      value={img}
+	      autoComplete="off"
+	      onChange={this.handleChange} 
+	    />
+	  </div>
 
-	<div className="form-recipe-img">
-	  <label htmlFor="img">Image Url</label>
-	  <input 
-	    type="text" 
-	    name="img" 
-	    onChange={this.handleChange} 
-	  />
-	</div>
-
-	<input type="submit" value="SAVE"/>
-
-      </form>
+	  <button 
+	    type="submit" 
+	    className="buttons"
+	    style={{alignSelf: 'flex-end', marginRight: 0}}
+	  >
+	    SAVE
+	  </button>
+        </form>
+      </div>
     );
   }
 }
