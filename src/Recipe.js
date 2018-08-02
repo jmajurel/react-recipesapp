@@ -24,20 +24,23 @@ function Recipe(props) {
 	<h4>Instructions:</h4>
 	<p>{props.instructions}</p>
       </div>
+      <button onClick={() => props.deleteRecipe(props.id)}>Delete</button>
 
     </li>
   );
 }
 
 Recipe.defaultProps = {
-  ingredients: []
+  ingredients: [],
+  deleteRecipe: () => {}
 };
 
 Recipe.propTypes = {
   name: PropTypes.string,
   img: PropTypes.string,
   ingredients: PropTypes.array,
-  instructions: PropTypes.string
+  instructions: PropTypes.string,
+  id: PropTypes.number
 };
 
 export default Recipe;

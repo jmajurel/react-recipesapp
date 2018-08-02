@@ -6,7 +6,7 @@ import RecipeList from './RecipeList';
 import RecipeForm from './RecipeForm';
 
 /* helper class */
-class RecipeEntry {
+/*class RecipeEntry {
   constructor(id, name, img, ingredients, instructions){
     this.id = id;
     this.name = name;
@@ -14,7 +14,7 @@ class RecipeEntry {
     this.ingredients = ingredients;
     this.instructions = instructions;
   }
-};
+};*/
 
 class RecipeApp extends Component {
 
@@ -41,31 +41,42 @@ class RecipeApp extends Component {
 	  ingredients: ['pitted black olives', 'capers', 'anchovies', 'olive oil', 'garlic', 'red chilli', 'baguette', 'herbs de Provence'],
 	  instructions: "STEP 1 Blend the olives, capers, anchovies and oil, then stir in the garlic and chilli. STEP 2 Rub the baguette with olive oil and garlic, toast and spread with tapenade."
       }],
-      nextRecipeId: 3
+      nextRecipeId: 3,
+      showForm: false
     };
 
     this.handleSave = this.handleSave.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   handleSave(recipe) {
-    console.log(recipe);
 
     this.setState((prevState, props) => {
       const newRecipe = {id: this.state.nextRecipeId, ...recipe};
       return {
 	nextRecipeId: prevState.nextRecipeId + 1,
-	recipes: [...this.state.recipes, newRecipe]
+	recipes: [...this.state.recipes, newRecipe],
+	showForm: false
       };
     })
 
   }
 
+  handleDelete(id) {
+    this.setState({recipes: [...this.state.recipes.filter(recipe => recipe.id !== id)]});
+  }
+
   render() {
     return (
       <div className="App">
-        <NavBar />
-	<RecipeForm onSave={this.handleSave}/>
-	<RecipeList recipes={this.state.recipes} />
+        <NavBar showForm={() => this.setState({showForm: true})}/>
+	  { this.state.showForm ? 
+	      <RecipeForm 
+		onClose={() => this.setState({showForm: false})} 
+		onSave={this.handleSave}/> 
+	    : null 
+	  }
+	<RecipeList deleteRecipe={this.handleDelete} recipes={this.state.recipes} />
       </div>
     );
   }
